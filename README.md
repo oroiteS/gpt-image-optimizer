@@ -68,25 +68,42 @@ mkdir -p ~/.agents/skills && cp -r gpt-image-optimizer ~/.agents/skills/
 ```
 （仓库根即 skill 本体）
 ├── SKILL.md                  # 主控：六步流水线 + 13 类索引 + 输出约定
-└── references/
-    ├── craft.md              # 22 节跨类别写作工艺（九层骨架、文字四件套、
-    │                         #   负面三分类、身份锁、防漂移三板斧、INTELLIGENCE RULE…）
-    ├── photography.md        # 摄影与照片级写实（9 样例）
-    ├── portrait-avatar.md    # 人像·头像·写真（9）
-    ├── product-ecommerce.md  # 产品与电商（9）
-    ├── poster-ad-brand.md    # 海报·广告·品牌（9）
-    ├── typography.md         # 字体·文字·书法（8）
-    ├── ui-social.md          # UI·社交媒体·截图（9）
-    ├── infographic-data.md   # 信息图·数据·科研图（8）
-    ├── illustration.md       # 插画与艺术风格（5）
-    ├── anime-manga.md        # 动漫·漫画·分镜（5）
-    ├── gaming-pixel.md       # 游戏与像素（6）
-    ├── character.md          # 角色与一致性（8）
-    ├── editing.md            # 图像编辑与风格迁移（8）
-    └── architecture-space.md # 建筑与空间（5）
+├── references/
+│   ├── craft.md              # 22 节跨类别写作工艺（九层骨架、文字四件套、
+│   │                         #   负面三分类、身份锁、防漂移三板斧、INTELLIGENCE RULE…）
+│   ├── photography.md        # 摄影与照片级写实（9 样例）
+│   ├── portrait-avatar.md    # 人像·头像·写真（9）
+│   ├── product-ecommerce.md  # 产品与电商（9）
+│   ├── poster-ad-brand.md    # 海报·广告·品牌（9）
+│   ├── typography.md         # 字体·文字·书法（8）
+│   ├── ui-social.md          # UI·社交媒体·截图（9）
+│   ├── infographic-data.md   # 信息图·数据·科研图（8）
+│   ├── illustration.md       # 插画与艺术风格（5）
+│   ├── anime-manga.md        # 动漫·漫画·分镜（5）
+│   ├── gaming-pixel.md       # 游戏与像素（6）
+│   ├── character.md          # 角色与一致性（8）
+│   ├── editing.md            # 图像编辑与风格迁移（8）
+│   └── architecture-space.md # 建筑与空间（5）
+├── data/prompts/             # 深度检索层：15,210 条社区 prompt（46MB JSON，
+│                             #   勿手工整读，用下方脚本查询）
+└── scripts/
+    └── search_prompts.py     # 数据层检索脚本（纯标准库：search / view / stats）
 ```
 
 每个 gallery 文件 = 定位说明 + 检索 tags + 精选样例（prompt 全文 + 一句点评 + 来源）+ 避坑清单。
+
+## 深度检索（gallery 覆盖不到的长尾需求）
+
+13 类 gallery 是精选层；需求罕见（冷门行业/风格组合）或想看更多参照时，用脚本搜内置数据层（15,210 条，英文为主，中文关键词自动扩展英文同义词，自动标记疑似截断条目）：
+
+```bash
+python3 scripts/search_prompts.py search "咖啡 海报" --limit 8   # 中→英扩展检索
+python3 scripts/search_prompts.py search "cyberpunk city" --category poster-flyer
+python3 scripts/search_prompts.py view 35920                     # 按 id 取全文
+python3 scripts/search_prompts.py stats                          # 各分类条目数
+```
+
+> 数据层使仓库体积增至约 46MB；skill 安装（SKILL.md + references/）本身不受影响。
 
 ## 参考仓库
 
@@ -98,7 +115,7 @@ mkdir -p ~/.agents/skills && cp -r gpt-image-optimizer ~/.agents/skills/
 | [YouMind-OpenLab/awesome-gpt-image-2](https://github.com/YouMind-OpenLab/awesome-gpt-image-2) | CC BY 4.0 | 四种 prompt 形态、防漂移三板斧、LOCK 条款族、参数槽 |
 | [EvoLinkAI/awesome-gpt-image-2-API-and-Prompts](https://github.com/EvoLinkAI/awesome-gpt-image-2-API-and-Prompts) | CC0 | 参数化模板、INTELLIGENCE RULE、结构化形态谱系 |
 | [wuyoscar/gpt_image_2_skill](https://github.com/wuyoscar/gpt_image_2_skill)（GPT-Image2-Skill） | MIT | craft 写作工艺骨架、反向 prompt 输出契约、模板工程规范 |
-| [YouMind-OpenLab/ai-image-prompts-skill](https://github.com/YouMind-OpenLab/ai-image-prompts-skill) | MIT | 检索式工作流、默认值推断、身份锁三段式、{argument} 槽位 |
+| [YouMind-OpenLab/ai-image-prompts-skill](https://github.com/YouMind-OpenLab/ai-image-prompts-skill) | MIT | 检索式工作流、默认值推断、身份锁三段式、{argument} 槽位；**深度检索层数据（`data/prompts/`）亦来源于此** |
 | [freestylefly/awesome-gpt-image-2](https://github.com/freestylefly/awesome-gpt-image-2) | MIT | 六块组装结构、四级匹配漏斗、13 类避坑指南、变量系统分级 |
 
 感谢以上项目的社区贡献者。样例 prompt 的原始作者信息保留在各 gallery 文件的来源标注中。

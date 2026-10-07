@@ -48,7 +48,24 @@ description: 根据用户模糊的生图需求自动优化出可直接使用的�
 | 改图、风格迁移、上色、换装、换背景、翻译漫画、多图合成、材质替换、对比图 | 图像编辑与风格迁移 | `references/editing.md` |
 | 建筑外观、室内设计、家装、空间渲染、草图转效果图 | 建筑与空间 | `references/architecture-space.md` |
 
-匹配顺序：显式产物词（海报/头像/信息图）→ 风格词（写实/水彩/3D）→ 语境词（给咖啡店/儿童教育/电商）→ 就近样例。跨类别需求（如"把我的照片变成吉卜力风格"）：先 `editing.md`，再按需读风格类。索引无匹配时按 craft 自由撰写，并在输出时注明"库内无现成参照，AI 原创方案"。
+匹配顺序：显式产物词（海报/头像/信息图）→ 风格词（写实/水彩/3D）→ 语境词（给咖啡店/儿童教育/电商）→ 就近样例。跨类别需求（如"把我的照片变成吉卜力风格"）：先 `editing.md`，再按需读风格类。
+
+#### 深度检索（gallery 无匹配时的后备层）
+
+索引无匹配、需求罕见（冷门行业/风格/主题组合），或用户想要更多参照时，检索内置数据层（15,210 条社区 prompt，46MB，**严禁整读 json**，只用脚本）：
+
+```bash
+python3 scripts/search_prompts.py search "咖啡 海报" --limit 8   # 中文自动扩展英文同义词
+python3 scripts/search_prompts.py search "cyberpunk city" --category poster-flyer
+python3 scripts/search_prompts.py view 35920                     # 按 id 取全文
+python3 scripts/search_prompts.py stats                          # 各分类条目数
+```
+
+使用纪律：
+- 命中后 **view 取全文**，按 Step 3 的方式"套结构"参考，继续走六步流水线，不因来自数据层就跳过自检。
+- 数据为英文原文：中文输出需求时按 Step 4 补全为中文 prompt；`{argument name=… default=…}` 槽位保留并填默认值；默认值偏欧美审美的，本地化为中文语境。
+- 带 ⚠️疑似截断 标记的条目只参考其结构，不整条照抄；带 📎需参考图 的条目先确认用户有素材图。
+- 输出时注明改编自数据层条目 id，便于溯源。索引与数据层都无匹配时按 craft 自由撰写，并在输出时注明"无现成参照，AI 原创方案"。
 
 ### Step 3 样例参考
 
