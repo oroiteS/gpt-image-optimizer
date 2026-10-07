@@ -25,6 +25,12 @@ pnpm dlx skills add oroiteS/gpt-image-optimizer
 npx skills add oroiteS/gpt-image-optimizer --global
 ```
 
+安装到跨工具通用目录 `~/.agents/skills/`（CLI 中该目标名为 `universal`）：
+
+```bash
+npx skills add oroiteS/gpt-image-optimizer -g -a universal -y
+```
+
 ### 方式二：手动安装
 
 ```bash
